@@ -166,14 +166,15 @@ function Install-NSSM {
 }
 
 function Install-Steam {
-    $steam_exe = "steam.exe"
-    Write-Output "Downloading steam into path $PSScriptRoot\$steam_exe"
-    $webClient.DownloadFile("https://steamcdn-a.akamaihd.net/client/installer/SteamSetup.exe", "$PSScriptRoot\$steam_exe")
-    Write-Output "Installing steam"
-    Start-Process -FilePath "$PSScriptRoot\$steam_exe" -ArgumentList "/S" -Wait
+    choco install steam -y
+}
 
-    Write-Output "Cleaning up steam installation file"
-    Remove-Item -Path $PSScriptRoot\$steam_exe -Confirm:$false
+function Install-Origin {
+    choco install origin -y
+}
+
+function Install-Chrome {
+    choco install googlechrome -y
 }
 
 function Set-ScheduleWorkflow ($admin_username, $admin_password, $manual_install) {
@@ -206,9 +207,17 @@ function Add-DisconnectShortcut {
     Write-Output "Create disconnect shortcut under C:\disconnect.lnk"
 
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut("C:\disconnect.lnk")
+    # todo: you know users name, so just put it on the desktop
+    $Shortcut = $WshShell.CreateShortcut("C:\disconnect1.lnk")
     $Shortcut.TargetPath = "C:\Windows\System32\tscon.exe"
     $Shortcut.Arguments = "1 /dest:console"
+    $Shortcut.Save()
+
+    $WshShell = New-Object -comObject WScript.Shell
+    # todo: you know users name, so just put it on the desktop
+    $Shortcut = $WshShell.CreateShortcut("C:\disconnect2.lnk")
+    $Shortcut.TargetPath = "C:\Windows\System32\tscon.exe"
+    $Shortcut.Arguments = "2 /dest:console"
     $Shortcut.Save()
 }
 
