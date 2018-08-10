@@ -115,7 +115,7 @@ function Install-VirtualAudio {
     Start-Process -FilePath "$PSScriptRoot\$wdk_installer" -ArgumentList "/S" -Wait
 
     $cert = "vb_cert.cer"
-    $url = "https://github.com/ecalder6/azure-gaming/raw/master/$cert"
+    $url = "https://github.com/ipepe/azure-gaming/raw/master/$cert"
 
     Write-Output "Downloading vb certificate from $url"
     $webClient.DownloadFile($url, "$PSScriptRoot\$cert")
@@ -142,7 +142,7 @@ function Disable-IPv6To4 {
 
 function Install-VPN {
     $cert = "zerotier_cert.cer"
-    $url = "https://github.com/ecalder6/azure-gaming/raw/master/$cert"
+    $url = "https://github.com/ipepe/azure-gaming/raw/master/$cert"
 
     Write-Output "Downloading zero tier certificate from $url"
     $webClient.DownloadFile($url, "$PSScriptRoot\$cert")
@@ -166,19 +166,20 @@ function Install-NSSM {
 }
 
 function Install-Steam {
-    $steam_exe = "steam.exe"
-    Write-Output "Downloading steam into path $PSScriptRoot\$steam_exe"
-    $webClient.DownloadFile("https://steamcdn-a.akamaihd.net/client/installer/SteamSetup.exe", "$PSScriptRoot\$steam_exe")
-    Write-Output "Installing steam"
-    Start-Process -FilePath "$PSScriptRoot\$steam_exe" -ArgumentList "/S" -Wait
+    choco install steam -y
+}
 
-    Write-Output "Cleaning up steam installation file"
-    Remove-Item -Path $PSScriptRoot\$steam_exe -Confirm:$false
+function Install-Origin {
+    choco install origin -y
+}
+
+function Install-Chrome {
+    choco install googlechrome -y
 }
 
 function Set-ScheduleWorkflow ($admin_username, $admin_password, $manual_install) {
     $script_name = "setup2.ps1"
-    $url = "https://raw.githubusercontent.com/ecalder6/azure-gaming/master/$script_name"
+    $url = "https://raw.githubusercontent.com/ipepe/azure-gaming/master/$script_name"
 
     Write-Output "Downloading second stage setup script from $url"
     $webClient.DownloadFile($url, "C:\$script_name")
@@ -206,9 +207,17 @@ function Add-DisconnectShortcut {
     Write-Output "Create disconnect shortcut under C:\disconnect.lnk"
 
     $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut("C:\disconnect.lnk")
+    # todo: you know users name, so just put it on the desktop
+    $Shortcut = $WshShell.CreateShortcut("C:\disconnect1.lnk")
     $Shortcut.TargetPath = "C:\Windows\System32\tscon.exe"
     $Shortcut.Arguments = "1 /dest:console"
+    $Shortcut.Save()
+
+    $WshShell = New-Object -comObject WScript.Shell
+    # todo: you know users name, so just put it on the desktop
+    $Shortcut = $WshShell.CreateShortcut("C:\disconnect2.lnk")
+    $Shortcut.TargetPath = "C:\Windows\System32\tscon.exe"
+    $Shortcut.Arguments = "2 /dest:console"
     $Shortcut.Save()
 }
 

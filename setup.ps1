@@ -7,7 +7,7 @@ param (
 )
 
 function Get-UtilsScript ($script_name) {
-    $url = "https://raw.githubusercontent.com/ecalder6/azure-gaming/master/$script_name"
+    $url = "https://raw.githubusercontent.com/ipepe/azure-gaming/master/$script_name"
     Write-Host "Downloading utils script from $url"
     [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 
@@ -36,6 +36,9 @@ Install-Chocolatey
 Install-VPN
 Join-Network $network
 Install-NSSM
+Install-Chrome
+
+Add-AutoLogin $admin_username $admin_password
 
 Install-NvidiaDriver $manual_install
 Set-ScheduleWorkflow $admin_username $admin_password $manual_install
