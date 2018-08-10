@@ -191,10 +191,9 @@ function Set-ScheduleWorkflow ($admin_username, $admin_password, $manual_install
     if ($manual_install) {
         $cmd = -join ($cmd, " -manual_install")
     }
-
-    nssm install $service_name $powershell $cmd
-    nssm set $service_name Start SERVICE_AUTO_START
-    nssm set $service_name AppExit 0 Exit
+    $registry = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"
+    $registry_value = -join($powershell, $cmd)
+    Set-ItemProperty $registry $service_name -Value $registry_value -type String
 }
 
 function Disable-ScheduleWorkflow {
