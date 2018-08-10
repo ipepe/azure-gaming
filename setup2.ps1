@@ -13,5 +13,5 @@ Enable-Audio
 Install-VirtualAudio
 Install-Steam
 Install-Origin
-Add-AutoLogin $admin_username $admin_password
+
 Restart-Computer
